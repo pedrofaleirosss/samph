@@ -1,0 +1,55 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  name      String
+  email     String
+  pools     Pool[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Pool {
+  id           String        @id @default(uuid())
+  name         String
+  capacity     String?
+  imageUrl     String?
+  street       String?
+  neighborhood String?
+  number       Int?
+  city         String?
+  complement   String?
+  userId       String
+  user         User          @relation(fields: [userId], references: [id])
+  measurements Measurement[]
+  clientId     String
+  client       Client        @relation(fields: [clientId], references: [id])
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+}
+
+model Measurement {
+  id        String   @id @default(uuid())
+  phValue   Decimal  @db.Decimal(10, 2)
+  date      DateTime
+  poolId    String
+  pool      Pool     @relation(fields: [poolId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Client {
+  id        String   @id @default(uuid())
+  name      String
+  contact   String
+  pools     Pool[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
