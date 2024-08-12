@@ -12,8 +12,8 @@
     --popover-foreground: 0 0% 0%;
     --primary: 206 99% 34%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 0 0% 49%;
-    --secondary-foreground: 0 0% 0%;
+    --secondary: 0 0% 100%;
+    --secondary-foreground: 206 99% 34%;
     --muted: 0 0% 49%;
     --muted-foreground: 0 0% 0%;
     --accent: 0 0% 49%;
@@ -56,6 +56,20 @@
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
+  }
+
+  .custom-gradiente {
+    background: linear-gradient(
+      to bottom,
+      rgba(1, 92, 175, 1) 43%,
+      rgba(1, 92, 175, 0.9) 61%,
+      rgba(1, 92, 175, 0.17) 87%,
+      rgba(1, 92, 175, 0) 100%
+    );
+  }
+  .custom-background {
+    background-image: url("/public/piscina.png");
+    background-size: cover;
   }
 }
 
