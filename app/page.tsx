@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { Button } from "./_components/ui/button";
+import Link from "next/link";
 
 const Home = () => {
   return (
@@ -27,15 +28,17 @@ const Home = () => {
         <p className="text-white">Bem-vindo(a) ao SAMPH</p>
 
         <div className="flex flex-col gap-10">
-          <Button className="w-[350px] rounded-lg border-2 border-white bg-transparent py-4 text-xl font-bold">
+          <Button className="w-[300px] rounded-lg border-2 border-white bg-transparent py-4 text-xl font-bold">
             Cadastrar
           </Button>
-          <Button
-            variant="secondary"
-            className="w-[350px] rounded-lg text-xl font-bold"
-          >
-            Login
-          </Button>
+          <Link href="/login">
+            <Button
+              variant="secondary"
+              className="w-[300px] rounded-lg text-xl font-bold"
+            >
+              Login
+            </Button>
+          </Link>
         </div>
       </div>
     </div>
