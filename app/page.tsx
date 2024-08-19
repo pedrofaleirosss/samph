@@ -28,9 +28,11 @@ const Home = () => {
         <p className="text-white">Bem-vindo(a) ao SAMPH</p>
 
         <div className="flex flex-col gap-10">
-          <Button className="w-[300px] rounded-lg border-2 border-white bg-transparent py-4 text-xl font-bold">
-            Cadastrar
-          </Button>
+          <Link href="/sign-up">
+            <Button className="w-[300px] rounded-lg border-2 border-white bg-transparent py-4 text-xl font-bold">
+              Cadastrar
+            </Button>
+          </Link>
           <Link href="/login">
             <Button
               variant="secondary"
