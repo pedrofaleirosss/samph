@@ -19,17 +19,23 @@ const LoginPage = () => {
         <Input placeholder="Digite o e-mail" className="my-2" type="email" />
         <label>Senha</label>
         <Input placeholder="Digite a senha" className="my-2" type="password" />
-        <Button className="mt-6 w-full gap-3" variant="outline">
-          <Image src="/google.png" alt="Google" width={24} height={24} />
-          Entrar com Google
-        </Button>
-        <Link href="/sign-up" className="mt-2 text-sm text-primary">
-          Fazer o cadastro...
-        </Link>
         <Button className="mt-6 w-full text-xl font-bold" type="submit">
           Entrar
         </Button>
       </form>
+      <div className="mx-5 mt-4 flex items-center justify-evenly before:mr-4 before:block before:h-px before:flex-grow before:bg-primary after:ml-4 after:block after:h-px after:flex-grow after:bg-primary">
+        ou
+      </div>
+      <Button className="mx-5 mt-4 gap-2" variant="outline">
+        <Image src="/google.png" alt="Google" width={24} height={24} />
+        Entrar com Google
+      </Button>
+      <p className="mt-2 px-5 text-sm">
+        Não tem uma conta ainda?{" "}
+        <Link href="/sign-up" className="text-primary">
+          Crie sua conta.
+        </Link>
+      </p>
     </>
   );
 };
