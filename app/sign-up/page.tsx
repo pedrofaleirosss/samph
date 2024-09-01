@@ -1,10 +1,59 @@
+"use client";
+
 import Image from "next/image";
 import { Input } from "../_components/ui/input";
 import { Button } from "../_components/ui/button";
-import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "../_components/ui/form";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import GoogleSignInButton from "../_components/googleSignInButton";
+
+const formSchema = z
+  .object({
+    firstName: z.string().min(1, "Por favor, insira o seu nome").max(50),
+    lastName: z.string().min(1, "Por favor, insira o seu sobrenome").max(50),
+    email: z
+      .string()
+      .min(1, "Por favor, insira o seu e-mail")
+      .email("Por favor, insira um e-mail válido")
+      .max(254),
+    password: z
+      .string()
+      .min(1, "Por favor, insira uma senha")
+      .min(8, "A senha deve ter no mínimo 8 caracteres")
+      .max(30),
+    confirmPassword: z.string().min(1, "Por favor, confirme sua senha").max(30),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    path: ["confirmPassword"],
+    message: "As senhas não coincidem",
+  });
 
 const SignUpPage = () => {
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: {
+      firstName: "",
+      lastName: "",
+      email: "",
+      password: "",
+      confirmPassword: "",
+    },
+  });
+
+  const onSubmit = (values: z.infer<typeof formSchema>) => {
+    console.log(values);
+  };
+
   return (
     <>
       <div className="my-[60px] flex justify-center">
@@ -15,32 +64,129 @@ const SignUpPage = () => {
           Cadastro
         </h2>
       </div>
-      <form className="mt-6 px-5">
-        <label>Nome</label>
-        <Input placeholder="Digite o nome" className="my-2" type="text" />
-        <label>Sobrenome</label>
-        <Input placeholder="Digite o sobrenome" className="my-2" type="text" />
-        <label>E-mail</label>
-        <Input placeholder="Digite o e-mail" className="my-2" type="email" />
-        <label>Senha</label>
-        <Input placeholder="Digite a senha" className="my-2" type="password" />
-        <label>Confirmar senha</label>
-        <Input
-          placeholder="Digite a senha novamente"
-          className="my-2"
-          type="password"
-        />
-        <Link
-          href="/login"
-          className="mt-2 flex items-center text-sm text-primary"
-        >
-          <ArrowLeft size={18} />
-          Login
+
+      <Form {...form}>
+        <form className="mt-6 px-5" onSubmit={form.handleSubmit(onSubmit)}>
+          <div className="space-y-2">
+            <FormField
+              control={form.control}
+              name="firstName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-base font-normal">Nome</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Digite o nome"
+                      {...field}
+                      maxLength={50}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="lastName"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-base font-normal">
+                    Sobrenome
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Digite o sobrenome"
+                      {...field}
+                      maxLength={50}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-base font-normal">
+                    E-mail
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Digite o e-mail"
+                      {...field}
+                      maxLength={254}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-base font-normal">Senha</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Digite a senha"
+                      {...field}
+                      type="password"
+                      maxLength={30}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="confirmPassword"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-base font-normal">
+                    Confirmar senha
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Digite a senha novamente"
+                      {...field}
+                      type="password"
+                      maxLength={30}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <Button className="mt-6 w-full text-xl font-bold" type="submit">
+            Cadastrar
+          </Button>
+        </form>
+      </Form>
+
+      <div className="mx-5 mt-4 flex items-center justify-evenly before:mr-4 before:block before:h-px before:flex-grow before:bg-primary after:ml-4 after:block after:h-px after:flex-grow after:bg-primary">
+        ou
+      </div>
+
+      <div className="mx-5 mt-4">
+        <GoogleSignInButton />
+      </div>
+
+      <p className="mb-6 mt-2 px-5 text-sm">
+        Já possui uma conta?{" "}
+        <Link href="/login" className="text-primary hover:underline">
+          Faça seu Login.
         </Link>
-        <Button className="my-6 w-full text-xl font-bold" type="submit">
-          Cadastrar
-        </Button>
-      </form>
+      </p>
     </>
   );
 };

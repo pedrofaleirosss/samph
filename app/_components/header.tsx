@@ -1,12 +1,18 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Sheet, SheetContent, SheetHeader, SheetTrigger } from "./ui/sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "./ui/sheet";
 import { Button } from "./ui/button";
 import { MenuIcon } from "lucide-react";
 
 const Header = () => {
   return (
-    <div className="flex flex-row items-center justify-between bg-primary p-5 shadow-xl">
+    <nav className="flex flex-row items-center justify-between bg-primary p-5 shadow-xl">
       <Link href="/pools">
         <Image src="/logo-menu.png" alt="SAMPH" width={120} height={18} />
       </Link>
@@ -18,10 +24,12 @@ const Header = () => {
           </Button>
         </SheetTrigger>
         <SheetContent>
-          <SheetHeader>Menu</SheetHeader>
+          <SheetHeader>
+            <SheetTitle>Menu</SheetTitle>
+          </SheetHeader>
         </SheetContent>
       </Sheet>
-    </div>
+    </nav>
   );
 };
 
