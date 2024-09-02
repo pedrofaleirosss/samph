@@ -1,14 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "./ui/sheet";
+import { Sheet, SheetTrigger } from "./ui/sheet";
 import { Button } from "./ui/button";
 import { MenuIcon } from "lucide-react";
+import SidebarContent from "./sidebar-content";
 
 const Header = () => {
   return (
@@ -23,11 +18,7 @@ const Header = () => {
             <MenuIcon size={30} />
           </Button>
         </SheetTrigger>
-        <SheetContent>
-          <SheetHeader>
-            <SheetTitle>Menu</SheetTitle>
-          </SheetHeader>
-        </SheetContent>
+        <SidebarContent />
       </Sheet>
     </nav>
   );

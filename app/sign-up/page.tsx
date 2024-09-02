@@ -16,6 +16,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import GoogleSignInButton from "../_components/googleSignInButton";
+import { useRouter } from "next/navigation";
 
 const formSchema = z
   .object({
@@ -39,6 +40,8 @@ const formSchema = z
   });
 
 const SignUpPage = () => {
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -50,8 +53,26 @@ const SignUpPage = () => {
     },
   });
 
-  const onSubmit = (values: z.infer<typeof formSchema>) => {
-    console.log(values);
+  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    const name = values.firstName.concat(" ", values.lastName);
+
+    const response = await fetch("/api/user", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        name: name,
+        email: values.email,
+        password: values.password,
+      }),
+    });
+
+    if (response.ok) {
+      router.push("/login");
+    } else {
+      console.error("Falha ao cadastrar usuário.");
+    }
   };
 
   return (

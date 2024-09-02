@@ -10,7 +10,8 @@ datasource db {
 model User {
   id        String   @id @default(uuid())
   name      String
-  email     String
+  email     String   @unique
+  password  String
   pools     Pool[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -29,8 +30,8 @@ model Pool {
   userId       String
   user         User          @relation(fields: [userId], references: [id])
   measurements Measurement[]
-  clientId     String
-  client       Client        @relation(fields: [clientId], references: [id])
+  clientId     String?
+  client       Client?       @relation(fields: [clientId], references: [id])
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
 }
