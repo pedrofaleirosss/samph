@@ -18,6 +18,8 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import GoogleSignInButton from "../_components/googleSignInButton";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { useState } from "react";
 
 const formSchema = z.object({
   email: z
@@ -31,7 +33,15 @@ const formSchema = z.object({
 });
 
 const LoginPage = () => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [invalidCredentialsMessage, setInvalidCredentialsMessage] =
+    useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
+
+  const togglePasswordVisibility = () => {
+    setShowPassword((prevState) => !prevState);
+  };
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -42,15 +52,18 @@ const LoginPage = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    setIsLoading(true);
     const loginData = await signIn("credentials", {
       email: values.email,
       password: values.password,
       redirect: false,
     });
 
-    if (loginData?.error) {
-      console.log(loginData.error);
+    if (loginData?.error == "CredentialsSignin") {
+      setIsLoading(false);
+      setInvalidCredentialsMessage(true);
     } else {
+      setIsLoading(false);
       router.push("/pools");
     }
   };
@@ -67,7 +80,11 @@ const LoginPage = () => {
       </div>
 
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="mt-6 px-5">
+        <form
+          onSubmit={form.handleSubmit(onSubmit)}
+          onChange={() => setInvalidCredentialsMessage(false)}
+          className="mt-6 px-5"
+        >
           <div className="space-y-2">
             <FormField
               control={form.control}
@@ -92,11 +109,25 @@ const LoginPage = () => {
                 <FormItem>
                   <FormLabel className="text-base font-normal">Senha</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="Digite a senha"
-                      type="password"
-                      {...field}
-                    />
+                    <div className="relative">
+                      <Input
+                        placeholder="Digite a senha"
+                        type={showPassword ? "text" : "password"}
+                        {...field}
+                      />
+
+                      <button
+                        className="absolute inset-y-0 right-0 px-3 py-2"
+                        onClick={togglePasswordVisibility}
+                        type="button"
+                      >
+                        {showPassword ? (
+                          <EyeOff className="text-primary" />
+                        ) : (
+                          <Eye className="text-primary" />
+                        )}
+                      </button>
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -104,8 +135,14 @@ const LoginPage = () => {
             />
           </div>
 
+          {invalidCredentialsMessage && (
+            <p className="mt-2 text-sm font-medium text-destructive">
+              E-mail ou senha incorretos.
+            </p>
+          )}
+
           <Button className="mt-6 w-full text-xl font-bold" type="submit">
-            Entrar
+            {isLoading ? <Loader2 className="animate-spin" /> : "Entrar"}
           </Button>
         </form>
       </Form>

@@ -16,7 +16,16 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import GoogleSignInButton from "../_components/googleSignInButton";
-import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { Check, Eye, EyeOff, Loader2 } from "lucide-react";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "../_components/ui/dialog";
 
 const formSchema = z
   .object({
@@ -40,7 +49,20 @@ const formSchema = z
   });
 
 const SignUpPage = () => {
-  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+  const [emailConflictMessage, setEmailConflictMessage] = useState(false);
+  const [signUpErrorMessage, setSignUpErrorMessage] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+
+  const togglePasswordVisibility = () => {
+    setShowPassword((prevState) => !prevState);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword((prevState) => !prevState);
+  };
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -54,6 +76,7 @@ const SignUpPage = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    setIsLoading(true);
     const name = values.firstName.concat(" ", values.lastName);
 
     const response = await fetch("/api/user", {
@@ -69,9 +92,14 @@ const SignUpPage = () => {
     });
 
     if (response.ok) {
-      router.push("/login");
+      setIsLoading(false);
+      setIsDialogOpen(true);
     } else {
-      console.error("Falha ao cadastrar usuário.");
+      setIsLoading(false);
+      if (response.statusText === "Conflict") {
+        return setEmailConflictMessage(true);
+      }
+      setSignUpErrorMessage(true);
     }
   };
 
@@ -87,7 +115,14 @@ const SignUpPage = () => {
       </div>
 
       <Form {...form}>
-        <form className="mt-6 px-5" onSubmit={form.handleSubmit(onSubmit)}>
+        <form
+          className="mt-6 px-5"
+          onSubmit={form.handleSubmit(onSubmit)}
+          onChange={() => {
+            setEmailConflictMessage(false);
+            setSignUpErrorMessage(false);
+          }}
+        >
           <div className="space-y-2">
             <FormField
               control={form.control}
@@ -147,6 +182,12 @@ const SignUpPage = () => {
               )}
             />
 
+            {emailConflictMessage && (
+              <p className="mt-2 text-sm font-medium text-destructive">
+                Este e-mail já está sendo utilizado por outro usuário.
+              </p>
+            )}
+
             <FormField
               control={form.control}
               name="password"
@@ -154,12 +195,26 @@ const SignUpPage = () => {
                 <FormItem>
                   <FormLabel className="text-base font-normal">Senha</FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="Digite a senha"
-                      {...field}
-                      type="password"
-                      maxLength={30}
-                    />
+                    <div className="relative">
+                      <Input
+                        placeholder="Digite a senha"
+                        {...field}
+                        type={showPassword ? "text" : "password"}
+                        maxLength={30}
+                      />
+
+                      <button
+                        className="absolute inset-y-0 right-0 px-3 py-2"
+                        onClick={togglePasswordVisibility}
+                        type="button"
+                      >
+                        {showPassword ? (
+                          <EyeOff className="text-primary" />
+                        ) : (
+                          <Eye className="text-primary" />
+                        )}
+                      </button>
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -175,12 +230,26 @@ const SignUpPage = () => {
                     Confirmar senha
                   </FormLabel>
                   <FormControl>
-                    <Input
-                      placeholder="Digite a senha novamente"
-                      {...field}
-                      type="password"
-                      maxLength={30}
-                    />
+                    <div className="relative">
+                      <Input
+                        placeholder="Digite a senha novamente"
+                        {...field}
+                        type={showConfirmPassword ? "text" : "password"}
+                        maxLength={30}
+                      />
+
+                      <button
+                        className="absolute inset-y-0 right-0 px-3 py-2"
+                        onClick={toggleConfirmPasswordVisibility}
+                        type="button"
+                      >
+                        {showConfirmPassword ? (
+                          <EyeOff className="text-primary" />
+                        ) : (
+                          <Eye className="text-primary" />
+                        )}
+                      </button>
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -188,8 +257,14 @@ const SignUpPage = () => {
             />
           </div>
 
+          {signUpErrorMessage && (
+            <p className="mt-2 text-sm font-medium text-destructive">
+              Erro ao cadastrar usuário. Tente novamente mais tarde.
+            </p>
+          )}
+
           <Button className="mt-6 w-full text-xl font-bold" type="submit">
-            Cadastrar
+            {isLoading ? <Loader2 className="animate-spin" /> : "Cadastrar"}
           </Button>
         </form>
       </Form>
@@ -208,6 +283,26 @@ const SignUpPage = () => {
           Faça seu Login.
         </Link>
       </p>
+
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="w-[60%] rounded-xl">
+          <DialogHeader className="flex flex-col items-center">
+            <Check
+              className="rounded-full bg-primary p-2 text-white"
+              size={50}
+            />
+            <DialogTitle className="py-4">Cadastro Efetuado!</DialogTitle>
+            <DialogDescription>
+              Seu cadastro foi realizado com sucesso.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogClose asChild>
+            <Button asChild>
+              <Link href="/login">Continuar</Link>
+            </Button>
+          </DialogClose>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };
