@@ -37,6 +37,7 @@ const LoginPage = () => {
   const [invalidCredentialsMessage, setInvalidCredentialsMessage] =
     useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const router = useRouter();
 
   const togglePasswordVisibility = () => {
@@ -52,6 +53,7 @@ const LoginPage = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    setIsButtonDisabled(true);
     setIsLoading(true);
     const loginData = await signIn("credentials", {
       email: values.email,
@@ -62,8 +64,8 @@ const LoginPage = () => {
     if (loginData?.error == "CredentialsSignin") {
       setIsLoading(false);
       setInvalidCredentialsMessage(true);
+      setIsButtonDisabled(false);
     } else {
-      setIsLoading(false);
       router.push("/pools");
     }
   };
@@ -122,9 +124,9 @@ const LoginPage = () => {
                         type="button"
                       >
                         {showPassword ? (
-                          <EyeOff className="text-primary" />
-                        ) : (
                           <Eye className="text-primary" />
+                        ) : (
+                          <EyeOff className="text-primary" />
                         )}
                       </button>
                     </div>
@@ -141,7 +143,11 @@ const LoginPage = () => {
             </p>
           )}
 
-          <Button className="mt-6 w-full text-xl font-bold" type="submit">
+          <Button
+            className="mt-6 w-full text-xl font-bold"
+            type="submit"
+            disabled={isButtonDisabled}
+          >
             {isLoading ? <Loader2 className="animate-spin" /> : "Entrar"}
           </Button>
         </form>

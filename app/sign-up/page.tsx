@@ -55,6 +55,7 @@ const SignUpPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
 
   const togglePasswordVisibility = () => {
     setShowPassword((prevState) => !prevState);
@@ -76,6 +77,7 @@ const SignUpPage = () => {
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
+    setIsButtonDisabled(true);
     setIsLoading(true);
     const name = values.firstName.concat(" ", values.lastName);
 
@@ -92,9 +94,11 @@ const SignUpPage = () => {
     });
 
     if (response.ok) {
+      setIsButtonDisabled(false);
       setIsLoading(false);
       setIsDialogOpen(true);
     } else {
+      setIsButtonDisabled(false);
       setIsLoading(false);
       if (response.statusText === "Conflict") {
         return setEmailConflictMessage(true);
@@ -209,9 +213,9 @@ const SignUpPage = () => {
                         type="button"
                       >
                         {showPassword ? (
-                          <EyeOff className="text-primary" />
-                        ) : (
                           <Eye className="text-primary" />
+                        ) : (
+                          <EyeOff className="text-primary" />
                         )}
                       </button>
                     </div>
@@ -244,9 +248,9 @@ const SignUpPage = () => {
                         type="button"
                       >
                         {showConfirmPassword ? (
-                          <EyeOff className="text-primary" />
-                        ) : (
                           <Eye className="text-primary" />
+                        ) : (
+                          <EyeOff className="text-primary" />
                         )}
                       </button>
                     </div>
@@ -263,7 +267,11 @@ const SignUpPage = () => {
             </p>
           )}
 
-          <Button className="mt-6 w-full text-xl font-bold" type="submit">
+          <Button
+            className="mt-6 w-full text-xl font-bold"
+            type="submit"
+            disabled={isButtonDisabled}
+          >
             {isLoading ? <Loader2 className="animate-spin" /> : "Cadastrar"}
           </Button>
         </form>
