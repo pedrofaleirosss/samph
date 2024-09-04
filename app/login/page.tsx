@@ -33,11 +33,11 @@ const formSchema = z.object({
 });
 
 const LoginPage = () => {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [invalidCredentialsMessage, setInvalidCredentialsMessage] =
-    useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+    useState<boolean>(false);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
   const router = useRouter();
 
   const togglePasswordVisibility = () => {

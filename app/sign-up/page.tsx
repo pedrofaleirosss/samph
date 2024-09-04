@@ -49,13 +49,15 @@ const formSchema = z
   });
 
 const SignUpPage = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [emailConflictMessage, setEmailConflictMessage] = useState(false);
-  const [signUpErrorMessage, setSignUpErrorMessage] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [emailConflictMessage, setEmailConflictMessage] =
+    useState<boolean>(false);
+  const [signUpErrorMessage, setSignUpErrorMessage] = useState<boolean>(false);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [showConfirmPassword, setShowConfirmPassword] =
+    useState<boolean>(false);
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+  const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
 
   const togglePasswordVisibility = () => {
     setShowPassword((prevState) => !prevState);

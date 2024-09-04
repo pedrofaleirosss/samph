@@ -1,9 +1,10 @@
 import Image from "next/image";
 import { Button } from "./ui/button";
+import { signIn } from "next-auth/react";
 
 const GoogleSignInButton = () => {
   const loginWithGoogle = () => {
-    console.log("login with google");
+    signIn("google", { callbackUrl: "/pools" });
   };
 
   return (
