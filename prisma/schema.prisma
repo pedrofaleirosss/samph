@@ -21,7 +21,6 @@ model Pool {
   user         User          @relation(fields: [userId], references: [id])
   measurements Measurement[]
   clientId     String?
-  client       Client?       @relation(fields: [clientId], references: [id])
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt
 }
@@ -36,14 +35,6 @@ model Measurement {
   updatedAt DateTime @updatedAt
 }
 
-model Client {
-  id        String   @id @default(uuid())
-  name      String
-  contact   String
-  pools     Pool[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
 
 model Account {
   id                String  @id @default(cuid())
