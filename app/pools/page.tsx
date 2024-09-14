@@ -22,7 +22,7 @@ const PoolsPage = async () => {
 
         <div>
           <Button
-            className="mt-6 h-[140px] w-full rounded-xl border-2 border-primary bg-white hover:bg-gray-100"
+            className="mt-6 w-full rounded-xl border-2 border-primary bg-white p-12 hover:bg-gray-100"
             asChild
           >
             <Link

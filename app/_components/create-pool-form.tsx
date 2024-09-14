@@ -15,6 +15,9 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { useState } from "react";
 import { Loader2 } from "lucide-react";
+import { createPool } from "./_actions/create-pool";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { storage } from "../_lib/firebase";
 
 const formSchema = z.object({
   poolName: z.string().min(1, "Por favor, insira o nome da piscina").max(50),
@@ -25,21 +28,26 @@ const formSchema = z.object({
   city: z.string().optional(),
   image: z
     .instanceof(FileList)
-    // .refine((files) => files.length > 0, "Você deve selecionar uma imagem")
-    // .refine(
-    //   (files) => files[0]?.size <= 5 * 1024 * 1024,
-    //   "A imagem deve ter no máximo 5MB",
-    // )
-    // .refine(
-    //   (files) => ["image/jpeg", "image/png"].includes(files[0]?.type),
-    //   "A imagem deve ser JPEG ou PNG",
-    // )
-    .optional(),
+    .optional()
+    .refine(
+      (files) =>
+        !files || files.length === 0 || files[0]?.size <= 5 * 1024 * 1024,
+      "A imagem deve ter no máximo 5MB",
+    )
+    .refine(
+      (files) =>
+        !files ||
+        files.length === 0 ||
+        ["image/jpeg", "image/png"].includes(files[0]?.type),
+      "A imagem deve ser JPEG ou PNG",
+    ),
+  complement: z.string().optional(),
 });
 
 const CreatePoolForm = () => {
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [imageURL, setImageURL] = useState("");
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -50,16 +58,54 @@ const CreatePoolForm = () => {
       neighborhood: "",
       number: 0,
       city: "",
+      complement: "",
     },
   });
 
   const fileRef = form.register("image");
+
+  const uploadImage = async (files: FileList) => {
+    if (!files || files.length === 0) {
+      return "";
+    }
+
+    const file = files[0];
+    const storageRef = ref(storage, `images/${file.name}`);
+
+    try {
+      const uploadTaskSnapshot = await uploadBytesResumable(storageRef, file);
+
+      const downloadURL = await getDownloadURL(uploadTaskSnapshot.ref);
+
+      return downloadURL;
+    } catch (error) {
+      console.error("Erro ao fazer upload da imagem:", error);
+      return "";
+    }
+  };
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       setIsLoading(true);
       setIsButtonDisabled(true);
       console.log(values);
+
+      if (values.image) {
+        const downloadURL = await uploadImage(values.image);
+        setImageURL(downloadURL);
+        console.log(imageURL);
+      }
+
+      await createPool(
+        values.poolName,
+        imageURL,
+        values.poolCapacity,
+        values.street,
+        values.neighborhood,
+        values.number,
+        values.city,
+        values.complement,
+      );
     } catch (error) {
       setIsLoading(false);
       setIsButtonDisabled(false);
@@ -188,6 +234,26 @@ const CreatePoolForm = () => {
               )}
             />
           </div>
+
+          <FormField
+            control={form.control}
+            name="complement"
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormLabel className="text-base font-normal">
+                  Complemento
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="Digite o complemento"
+                    {...field}
+                    maxLength={50}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
 
           <FormField
             control={form.control}
