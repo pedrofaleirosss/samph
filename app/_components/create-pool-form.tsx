@@ -14,10 +14,19 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { useState } from "react";
-import { Loader2 } from "lucide-react";
+import { Check, Loader2 } from "lucide-react";
 import { createPool } from "./_actions/create-pool";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { storage } from "../_lib/firebase";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "./ui/dialog";
+import Link from "next/link";
 
 const formSchema = z.object({
   poolName: z.string().min(1, "Por favor, insira o nome da piscina").max(50),
@@ -47,7 +56,7 @@ const formSchema = z.object({
 const CreatePoolForm = () => {
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [imageURL, setImageURL] = useState("");
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -70,7 +79,10 @@ const CreatePoolForm = () => {
     }
 
     const file = files[0];
-    const storageRef = ref(storage, `images/${file.name}`);
+    const storageRef = ref(
+      storage,
+      `images/${file.name}-${Math.floor(Math.random() * 1000)}`,
+    );
 
     try {
       const uploadTaskSnapshot = await uploadBytesResumable(storageRef, file);
@@ -88,24 +100,18 @@ const CreatePoolForm = () => {
     try {
       setIsLoading(true);
       setIsButtonDisabled(true);
-      console.log(values);
 
-      if (values.image) {
-        const downloadURL = await uploadImage(values.image);
-        setImageURL(downloadURL);
-        console.log(imageURL);
+      const { image, ...otherValues } = values;
+
+      let downloadURL = "";
+
+      if (image) {
+        downloadURL = await uploadImage(image);
       }
 
-      await createPool(
-        values.poolName,
-        imageURL,
-        values.poolCapacity,
-        values.street,
-        values.neighborhood,
-        values.number,
-        values.city,
-        values.complement,
-      );
+      await createPool(otherValues, downloadURL);
+
+      setIsDialogOpen(true);
     } catch (error) {
       setIsLoading(false);
       setIsButtonDisabled(false);
@@ -117,114 +123,21 @@ const CreatePoolForm = () => {
   };
 
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
-        <div className="space-y-2">
-          <FormField
-            control={form.control}
-            name="poolName"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-base font-normal">
-                  Nome da Piscina
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Digite o nome da piscina"
-                    {...field}
-                    maxLength={50}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="poolCapacity"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-base font-normal">
-                  Capacidade da Piscina
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Digite a capacidade da piscina"
-                    {...field}
-                    maxLength={20}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="street"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-base font-normal">Rua</FormLabel>
-                <FormControl>
-                  <Input placeholder="Digite a rua" {...field} maxLength={50} />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="neighborhood"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-base font-normal">Bairro</FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Digite o bairro"
-                    {...field}
-                    maxLength={50}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <div className="flex w-full gap-4">
+    <>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <div className="space-y-2">
             <FormField
               control={form.control}
-              name="number"
+              name="poolName"
               render={({ field }) => (
-                <FormItem className="w-full">
+                <FormItem>
                   <FormLabel className="text-base font-normal">
-                    Número
+                    Nome da Piscina
                   </FormLabel>
                   <FormControl>
                     <Input
-                      placeholder="Digite o número"
-                      {...field}
-                      maxLength={10}
-                      type="number"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="city"
-              render={({ field }) => (
-                <FormItem className="w-full">
-                  <FormLabel className="text-base font-normal">
-                    Cidade
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Digite a cidade"
+                      placeholder="Digite o nome da piscina"
                       {...field}
                       maxLength={50}
                     />
@@ -233,53 +146,174 @@ const CreatePoolForm = () => {
                 </FormItem>
               )}
             />
+
+            <FormField
+              control={form.control}
+              name="poolCapacity"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-base font-normal">
+                    Capacidade da Piscina
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Digite a capacidade da piscina"
+                      {...field}
+                      maxLength={20}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="street"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-base font-normal">Rua</FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Digite a rua"
+                      {...field}
+                      maxLength={50}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="neighborhood"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-base font-normal">
+                    Bairro
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Digite o bairro"
+                      {...field}
+                      maxLength={50}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <div className="flex w-full gap-4">
+              <FormField
+                control={form.control}
+                name="number"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel className="text-base font-normal">
+                      Número
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Digite o número"
+                        {...field}
+                        maxLength={10}
+                        type="number"
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="city"
+                render={({ field }) => (
+                  <FormItem className="w-full">
+                    <FormLabel className="text-base font-normal">
+                      Cidade
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Digite a cidade"
+                        {...field}
+                        maxLength={50}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            <FormField
+              control={form.control}
+              name="complement"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel className="text-base font-normal">
+                    Complemento
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Digite o complemento"
+                      {...field}
+                      maxLength={50}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="image"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel className="text-base font-normal">
+                    Anexar Imagem
+                  </FormLabel>
+                  <FormControl>
+                    <Input {...fileRef} type="file" accept="image/*" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
           </div>
+          <Button
+            className="mt-6 w-full text-xl font-bold"
+            type="submit"
+            disabled={isButtonDisabled}
+          >
+            {isLoading ? <Loader2 className="animate-spin" /> : "Cadastrar"}
+          </Button>
+        </form>
+      </Form>
 
-          <FormField
-            control={form.control}
-            name="complement"
-            render={({ field }) => (
-              <FormItem className="w-full">
-                <FormLabel className="text-base font-normal">
-                  Complemento
-                </FormLabel>
-                <FormControl>
-                  <Input
-                    placeholder="Digite o complemento"
-                    {...field}
-                    maxLength={50}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="image"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel className="text-base font-normal">
-                  Anexar Imagem
-                </FormLabel>
-                <FormControl>
-                  <Input {...fileRef} type="file" accept="image/*" />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-        <Button
-          className="mt-6 w-full text-xl font-bold"
-          type="submit"
-          disabled={isButtonDisabled}
-        >
-          {isLoading ? <Loader2 className="animate-spin" /> : "Cadastrar"}
-        </Button>
-      </form>
-    </Form>
+      <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+        <DialogContent className="w-[60%] rounded-xl">
+          <DialogHeader className="flex flex-col items-center">
+            <Check
+              className="rounded-full bg-primary p-2 text-white"
+              size={50}
+            />
+            <DialogTitle className="py-4">Cadastro Efetuado!</DialogTitle>
+            <DialogDescription>
+              Piscina cadastrada com sucesso!
+            </DialogDescription>
+          </DialogHeader>
+          <DialogClose asChild>
+            <Button asChild>
+              <Link href="/pools">Continuar</Link>
+            </Button>
+          </DialogClose>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
 
