@@ -5,9 +5,17 @@ import { authOptions } from "../_lib/auth";
 import { Button } from "../_components/ui/button";
 import { PlusIcon } from "lucide-react";
 import Link from "next/link";
+import PoolItem from "../_components/pool-item";
+import { db } from "../_lib/db";
 
 const PoolsPage = async () => {
   const session = await getServerSession(authOptions);
+
+  const pools = await db.pool.findMany({
+    where: {
+      userId: (session?.user as any).id,
+    },
+  });
 
   return (
     <>
@@ -20,9 +28,15 @@ const PoolsPage = async () => {
           <Search />
         </div>
 
+        <div className="mt-6">
+          {pools.map((pool) => (
+            <PoolItem key={pool.id} pool={pool} />
+          ))}
+        </div>
+
         <div>
           <Button
-            className="mt-6 w-full rounded-xl border-2 border-primary bg-white p-12 hover:bg-gray-100"
+            className="w-full rounded-xl border-2 border-primary bg-white p-12 hover:bg-gray-100"
             asChild
           >
             <Link
