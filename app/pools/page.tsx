@@ -7,15 +7,12 @@ import { PlusIcon } from "lucide-react";
 import Link from "next/link";
 import PoolItem from "../_components/pool-item";
 import { db } from "../_lib/db";
+import { getPools } from "../_data/get-pools";
 
 const PoolsPage = async () => {
   const session = await getServerSession(authOptions);
 
-  const pools = await db.pool.findMany({
-    where: {
-      userId: (session?.user as any).id,
-    },
-  });
+  const pools = await getPools();
 
   return (
     <>

@@ -3,6 +3,7 @@
 import { authOptions } from "@/app/_lib/auth";
 import { db } from "@/app/_lib/db";
 import { getServerSession } from "next-auth";
+import { revalidatePath } from "next/cache";
 
 interface createPoolProps {
   poolName: string;
@@ -33,4 +34,6 @@ export const createPool = async (values: createPoolProps, imageURL: string) => {
       userId: (session.user as any).id,
     },
   });
+
+  revalidatePath("/pools");
 };

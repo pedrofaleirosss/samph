@@ -1,5 +1,6 @@
 import { Pool } from "@prisma/client";
 import Image from "next/image";
+import Link from "next/link";
 
 interface PoolItemProps {
   pool: Pool;
@@ -7,7 +8,7 @@ interface PoolItemProps {
 
 const PoolItem = ({ pool }: PoolItemProps) => {
   return (
-    <>
+    <Link href={`/pools/${pool.id}`}>
       <div className="relative h-[140px] w-full">
         <Image
           src={pool.imageUrl ? pool.imageUrl : "/sem-imagem.png"}
@@ -17,7 +18,7 @@ const PoolItem = ({ pool }: PoolItemProps) => {
         />
       </div>
       <p className="mb-4 mt-2">{pool.name}</p>
-    </>
+    </Link>
   );
 };
 
