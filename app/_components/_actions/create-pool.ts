@@ -13,10 +13,13 @@ interface createPoolProps {
   number?: number;
   city?: string;
   complement?: string;
+  clientName?: string;
+  clientContact?: string;
 }
 
 export const createPool = async (values: createPoolProps, imageURL: string) => {
   const session = await getServerSession(authOptions);
+
   if (!session) {
     throw new Error("Usuário não autenticado");
   }
@@ -30,6 +33,8 @@ export const createPool = async (values: createPoolProps, imageURL: string) => {
       number: values.number,
       city: values.city,
       complement: values.complement,
+      clientName: values.clientName,
+      clientContact: values.clientContact,
       imageUrl: imageURL,
       userId: (session.user as any).id,
     },

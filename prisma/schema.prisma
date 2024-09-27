@@ -8,20 +8,22 @@ datasource db {
 }
 
 model Pool {
-  id           String        @id @default(uuid())
-  name         String
-  capacity     String?
-  imageUrl     String?
-  street       String?
-  neighborhood String?
-  number       Int?
-  city         String?
-  complement   String?
-  userId       String
-  user         User          @relation(fields: [userId], references: [id])
-  measurements Measurement[]
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
+  id            String        @id @default(uuid())
+  name          String
+  capacity      String?
+  imageUrl      String?
+  street        String?
+  neighborhood  String?
+  number        Int?
+  city          String?
+  complement    String?
+  clientName    String?
+  clientContact String?
+  userId        String
+  user          User          @relation(fields: [userId], references: [id])
+  measurements  Measurement[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
 }
 
 model Measurement {
@@ -33,7 +35,6 @@ model Measurement {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
-
 
 model Account {
   id                String  @id @default(cuid())
@@ -89,4 +90,3 @@ model VerificationToken {
   @@unique([identifier, token])
   @@map("verificationtokens")
 }
-

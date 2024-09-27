@@ -51,6 +51,8 @@ const formSchema = z.object({
       "A imagem deve ser JPEG ou PNG",
     ),
   complement: z.string().optional(),
+  clientName: z.string().optional(),
+  clientContact: z.string().optional(),
 });
 
 const CreatePoolForm = () => {
@@ -68,6 +70,8 @@ const CreatePoolForm = () => {
       number: 0,
       city: "",
       complement: "",
+      clientName: "",
+      clientContact: "",
     },
   });
 
@@ -133,7 +137,7 @@ const CreatePoolForm = () => {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel className="text-base font-normal">
-                    Nome da Piscina
+                    Nome da Piscina <span className="text-red-600">*</span>
                   </FormLabel>
                   <FormControl>
                     <Input
@@ -259,6 +263,46 @@ const CreatePoolForm = () => {
                   <FormControl>
                     <Input
                       placeholder="Digite o complemento"
+                      {...field}
+                      maxLength={50}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="clientName"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel className="text-base font-normal">
+                    Nome do Cliente
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Digite o nome do cliente"
+                      {...field}
+                      maxLength={50}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="clientContact"
+              render={({ field }) => (
+                <FormItem className="w-full">
+                  <FormLabel className="text-base font-normal">
+                    Contato do Cliente
+                  </FormLabel>
+                  <FormControl>
+                    <Input
+                      placeholder="Digite o contato do cliente"
                       {...field}
                       maxLength={50}
                     />
