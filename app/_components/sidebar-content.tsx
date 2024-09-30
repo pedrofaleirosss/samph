@@ -11,7 +11,7 @@ const SidebarContent = async () => {
   const session = await getServerSession(authOptions);
 
   return (
-    <SheetContent>
+    <SheetContent className="w-[80%]">
       <SheetHeader>
         <SheetTitle className="text-left">Menu</SheetTitle>
       </SheetHeader>

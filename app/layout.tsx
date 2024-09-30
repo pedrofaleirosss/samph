@@ -17,6 +17,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <title>SAMPH</title>
+      </head>
       <body className={inter.className}>
         <AuthProvider>
           <div className="flex h-full flex-col">{children}</div>

@@ -6,11 +6,15 @@ import { Button } from "../_components/ui/button";
 import { PlusIcon } from "lucide-react";
 import Link from "next/link";
 import PoolItem from "../_components/pool-item";
-import { db } from "../_lib/db";
 import { getPools } from "../_data/get-pools";
+import Home from "../page";
 
 const PoolsPage = async () => {
   const session = await getServerSession(authOptions);
+
+  if (!session?.user) {
+    return Home();
+  }
 
   const pools = await getPools();
 

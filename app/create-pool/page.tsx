@@ -1,7 +1,16 @@
+import { getServerSession } from "next-auth";
 import CreatePoolForm from "../_components/create-pool-form";
 import Header from "../_components/header";
+import { authOptions } from "../_lib/auth";
+import Home from "../page";
 
-const CreatePoolPage = () => {
+const CreatePoolPage = async () => {
+  const session = await getServerSession(authOptions);
+
+  if (!session?.user) {
+    return Home();
+  }
+
   return (
     <>
       <Header />
