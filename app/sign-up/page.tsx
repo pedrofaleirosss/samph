@@ -15,7 +15,7 @@ import {
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import GoogleSignInButton from "../_components/googleSignInButton";
+import GoogleSignInButton from "../_components/google-sign-in-button";
 import { useState } from "react";
 import { Check, Eye, EyeOff, Loader2 } from "lucide-react";
 import {

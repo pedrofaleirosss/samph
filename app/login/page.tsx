@@ -15,7 +15,7 @@ import {
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import GoogleSignInButton from "../_components/googleSignInButton";
+import GoogleSignInButton from "../_components/google-sign-in-button";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Eye, EyeOff, Loader2 } from "lucide-react";

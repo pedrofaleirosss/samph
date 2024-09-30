@@ -1,7 +1,7 @@
 import { SheetContent, SheetHeader, SheetTitle } from "./ui/sheet";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../_lib/auth";
-import LogoutButton from "./logoutButton";
+import LogoutButton from "./logout-button";
 import { Avatar, AvatarImage } from "./ui/avatar";
 import { House, User } from "lucide-react";
 import { Button } from "./ui/button";

@@ -39,7 +39,7 @@ const LogoutButton = () => {
         </DialogHeader>
         <DialogFooter className="flex-row items-center justify-center gap-2">
           <DialogClose asChild>
-            <Button variant="ghost" className="w-[100px]">
+            <Button className="w-[100px] bg-gray-300 font-semibold text-gray-700">
               Cancelar
             </Button>
           </DialogClose>
