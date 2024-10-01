@@ -9,14 +9,20 @@ import PoolItem from "../_components/pool-item";
 import { getPools } from "../_data/get-pools";
 import Home from "../page";
 
-const PoolsPage = async () => {
+interface PoolsPageProps {
+  searchParams: {
+    name?: string;
+  };
+}
+
+const PoolsPage = async ({ searchParams }: PoolsPageProps) => {
   const session = await getServerSession(authOptions);
 
   if (!session?.user) {
     return Home();
   }
 
-  const pools = await getPools();
+  const pools = await getPools({ searchParams });
 
   return (
     <>
