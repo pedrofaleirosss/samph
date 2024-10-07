@@ -12,9 +12,8 @@ import {
 } from "@/app/_components/ui/dialog";
 import { Button } from "./ui/button";
 import { Pool } from "@prisma/client";
-import { deletePool } from "./_actions/delete-pool";
+import { deletePool } from "../_actions/delete-pool";
 import { useRouter } from "next/navigation";
-import { revalidatePath } from "next/cache";
 
 interface deletePoolButtonProps {
   pool: Pool;

@@ -56,9 +56,11 @@ const PoolPage = async ({ params }: PoolPageProps) => {
           <div className="flex items-center justify-between border-b border-solid border-gray-300 pb-5">
             <h1 className="text-xl font-medium text-primary">{pool.name}</h1>
 
-            <Button className="gap-1 rounded-xl p-3">
-              <span className="text-xs">Editar Informações</span>
-              <ChevronRightIcon size={18} />
+            <Button className="gap-1 rounded-xl p-3" asChild>
+              <Link href={`/update-pool/${pool.id}`}>
+                <span className="text-xs">Editar Informações</span>
+                <ChevronRightIcon size={18} />
+              </Link>
             </Button>
           </div>
 

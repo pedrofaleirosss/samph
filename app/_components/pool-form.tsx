@@ -15,7 +15,7 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { useState } from "react";
 import { Check, Loader2 } from "lucide-react";
-import { createPool } from "./_actions/create-pool";
+import { createPool } from "../_actions/create-pool";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { storage } from "../_lib/firebase";
 import {
@@ -27,6 +27,10 @@ import {
   DialogTitle,
 } from "./ui/dialog";
 import Link from "next/link";
+import { Pool } from "@prisma/client";
+import { deleteImage } from "../_actions/delete-image";
+import { updatePool } from "../_actions/update-pool";
+import { useRouter } from "next/navigation";
 
 const formSchema = z.object({
   poolName: z.string().min(1, "Por favor, insira o nome da piscina").max(50),
@@ -55,23 +59,29 @@ const formSchema = z.object({
   clientContact: z.string().optional(),
 });
 
-const CreatePoolForm = () => {
+interface poolFormProps {
+  pool?: Pool;
+}
+
+const PoolForm = ({ pool }: poolFormProps) => {
   const [isButtonDisabled, setIsButtonDisabled] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
 
+  const router = useRouter();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      poolName: "",
-      poolCapacity: "",
-      street: "",
-      neighborhood: "",
-      number: 0,
-      city: "",
-      complement: "",
-      clientName: "",
-      clientContact: "",
+      poolName: pool?.name ? pool.name : "",
+      poolCapacity: pool?.capacity ? pool.capacity : "",
+      street: pool?.street ? pool.street : "",
+      neighborhood: pool?.neighborhood ? pool.neighborhood : "",
+      number: pool?.number ? pool.number : 0,
+      city: pool?.city ? pool.city : "",
+      complement: pool?.complement ? pool.complement : "",
+      clientName: pool?.clientName ? pool.clientName : "",
+      clientContact: pool?.clientContact ? pool.clientContact : "",
     },
   });
 
@@ -109,13 +119,30 @@ const CreatePoolForm = () => {
 
       let downloadURL = "";
 
-      if (image) {
-        downloadURL = await uploadImage(image);
+      if (!pool) {
+        if (image) {
+          downloadURL = await uploadImage(image);
+        }
+
+        await createPool(otherValues, downloadURL);
+
+        setIsDialogOpen(true);
       }
 
-      await createPool(otherValues, downloadURL);
-
-      setIsDialogOpen(true);
+      if (pool) {
+        if (image && image.length > 0) {
+          if (pool.imageUrl) {
+            deleteImage(pool.imageUrl);
+          }
+          downloadURL = await uploadImage(image);
+        }
+        await updatePool(
+          otherValues,
+          image && image.length > 0 ? downloadURL : pool.imageUrl,
+          pool.id,
+        );
+        router.push(`/pools/${pool.id}`);
+      }
     } catch (error) {
       setIsLoading(false);
       setIsButtonDisabled(false);
@@ -333,7 +360,13 @@ const CreatePoolForm = () => {
             type="submit"
             disabled={isButtonDisabled}
           >
-            {isLoading ? <Loader2 className="animate-spin" /> : "Cadastrar"}
+            {isLoading ? (
+              <Loader2 className="animate-spin" />
+            ) : pool ? (
+              "Editar"
+            ) : (
+              "Cadastrar"
+            )}
           </Button>
         </form>
       </Form>
@@ -361,4 +394,4 @@ const CreatePoolForm = () => {
   );
 };
 
-export default CreatePoolForm;
+export default PoolForm;

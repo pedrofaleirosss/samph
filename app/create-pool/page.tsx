@@ -1,5 +1,5 @@
 import { getServerSession } from "next-auth";
-import CreatePoolForm from "../_components/create-pool-form";
+import PoolForm from "../_components/pool-form";
 import Header from "../_components/header";
 import { authOptions } from "../_lib/auth";
 import Home from "../page";
@@ -19,7 +19,7 @@ const CreatePoolPage = async () => {
         <h2 className="font-semibold text-primary">Nova Piscina</h2>
 
         <div className="mt-6">
-          <CreatePoolForm />
+          <PoolForm />
         </div>
       </div>
     </>
