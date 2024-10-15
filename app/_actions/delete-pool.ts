@@ -15,6 +15,11 @@ export const deletePool = async ({ pool }: deletePoolProps) => {
   }
 
   try {
+    await db.measurement.deleteMany({
+      where: {
+        poolId: pool.id,
+      },
+    });
     await db.pool.delete({
       where: {
         id: pool.id,

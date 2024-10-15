@@ -1,4 +1,6 @@
 import DeletePoolButton from "@/app/_components/delete-pool-button";
+import PhHistory from "@/app/_components/ph-history";
+import PoolInformation from "@/app/_components/pool-information";
 import SidebarContent from "@/app/_components/sidebar-content";
 import { Button } from "@/app/_components/ui/button";
 import { Sheet, SheetTrigger } from "@/app/_components/ui/sheet";
@@ -64,27 +66,9 @@ const PoolPage = async ({ params }: PoolPageProps) => {
             </Button>
           </div>
 
-          {pool.capacity ||
-          pool.street ||
-          pool.neighborhood ||
-          pool.number! > 0 ||
-          pool.city ||
-          pool.complement ||
-          pool.clientName ||
-          pool.clientContact ? (
-            <div className="space-y-2 border-b border-solid border-gray-300 py-5">
-              {pool.capacity && <p>Capacidade: {pool.capacity}</p>}
-              {pool.street && <p>Rua: {pool.street}</p>}
-              {pool.neighborhood && <p>Bairro: {pool.neighborhood}</p>}
-              {pool.number! > 0 && <p>Número: {pool.number}</p>}
-              {pool.city && <p>Cidade: {pool.city}</p>}
-              {pool.complement && <p>Complemento: {pool.complement}</p>}
-              {pool.clientName && <p>Cliente: {pool.clientName}</p>}
-              {pool.clientContact && <p>Contato: {pool.clientContact}</p>}
-            </div>
-          ) : (
-            ""
-          )}
+          <PoolInformation pool={pool} />
+
+          <PhHistory />
         </div>
       </div>
 
