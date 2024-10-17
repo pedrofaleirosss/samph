@@ -22,10 +22,22 @@ const PoolInformation = ({ pool }: PoolInformationProps) => {
     closed: { opacity: 0, y: "-20%", height: 0 },
   };
 
+  const poolHasInfo =
+    pool.capacity ||
+    pool.street ||
+    pool.neighborhood ||
+    pool.number! > 0 ||
+    pool.city ||
+    pool.complement ||
+    pool.clientName ||
+    pool.clientContact
+      ? true
+      : false;
+
   return (
     <>
       <Button
-        className="my-4 flex items-center justify-start px-0"
+        className="flex items-center justify-start px-0"
         variant="secondary"
         onClick={tooglePoolInfoVisibility}
       >
@@ -34,15 +46,7 @@ const PoolInformation = ({ pool }: PoolInformationProps) => {
       </Button>
 
       <AnimatePresence>
-        {showPoolInfo === true &&
-        (pool.capacity ||
-          pool.street ||
-          pool.neighborhood ||
-          pool.number! > 0 ||
-          pool.city ||
-          pool.complement ||
-          pool.clientName ||
-          pool.clientContact) ? (
+        {showPoolInfo === true && (
           <motion.div
             key="pool-info" // Chave única para identificação
             initial="closed"
@@ -53,18 +57,22 @@ const PoolInformation = ({ pool }: PoolInformationProps) => {
             style={{ overflow: "hidden", minHeight: "20px" }}
           >
             <div className="space-y-2">
-              {pool.capacity && <p>Capacidade: {pool.capacity}</p>}
-              {pool.street && <p>Rua: {pool.street}</p>}
-              {pool.neighborhood && <p>Bairro: {pool.neighborhood}</p>}
-              {pool.number! > 0 && <p>Número: {pool.number}</p>}
-              {pool.city && <p>Cidade: {pool.city}</p>}
-              {pool.complement && <p>Complemento: {pool.complement}</p>}
-              {pool.clientName && <p>Cliente: {pool.clientName}</p>}
-              {pool.clientContact && <p>Contato: {pool.clientContact}</p>}
+              {poolHasInfo ? (
+                <div>
+                  {pool.capacity && <p>Capacidade: {pool.capacity}</p>}
+                  {pool.street && <p>Rua: {pool.street}</p>}
+                  {pool.neighborhood && <p>Bairro: {pool.neighborhood}</p>}
+                  {pool.number! > 0 && <p>Número: {pool.number}</p>}
+                  {pool.city && <p>Cidade: {pool.city}</p>}
+                  {pool.complement && <p>Complemento: {pool.complement}</p>}
+                  {pool.clientName && <p>Cliente: {pool.clientName}</p>}
+                  {pool.clientContact && <p>Contato: {pool.clientContact}</p>}
+                </div>
+              ) : (
+                <p>Nenhuma informação cadastrada.</p>
+              )}
             </div>
           </motion.div>
-        ) : (
-          ""
         )}
       </AnimatePresence>
     </>

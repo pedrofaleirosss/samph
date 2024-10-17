@@ -9,6 +9,8 @@ import { ChevronLeftIcon, ChevronRightIcon, MenuIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { format } from "date-fns";
+import { ptBR } from "date-fns/locale";
 
 interface PoolPageProps {
   params: {
@@ -26,6 +28,17 @@ const PoolPage = async ({ params }: PoolPageProps) => {
   if (!pool) {
     return notFound();
   }
+
+  const measurements = await db.measurement.findMany({
+    where: {
+      poolId: pool.id,
+    },
+    orderBy: {
+      date: "desc",
+    },
+  });
+
+  const lastMeasurement = measurements[0];
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -66,9 +79,39 @@ const PoolPage = async ({ params }: PoolPageProps) => {
             </Button>
           </div>
 
-          <PoolInformation pool={pool} />
+          {measurements.length > 0 ? (
+            <div className="mt-5 flex flex-col items-center justify-center space-y-4">
+              <h2 className="text-lg font-semibold text-primary">
+                Última Medição:{" "}
+                {format(lastMeasurement.date, "HH:mm", { locale: ptBR })} -{" "}
+                {format(lastMeasurement.date, "dd/MM/yyyy", { locale: ptBR })}
+              </h2>
 
-          <PhHistory />
+              <div className="space-y-4">
+                <div className="rounded-2xl border-2 border-solid border-primary p-5">
+                  <h3 className="text-xl font-semibold text-primary">
+                    Valor do pH:{" "}
+                    {Number(lastMeasurement.phValue).toLocaleString("pt-BR", {
+                      minimumFractionDigits: 3,
+                      maximumSignificantDigits: 4,
+                    })}
+                  </h3>
+                </div>
+
+                <Button className="w-full rounded-xl">Medir Agora</Button>
+              </div>
+            </div>
+          ) : (
+            ""
+          )}
+
+          <div className="my-4">
+            <PoolInformation pool={pool} />
+          </div>
+
+          <div className="my-4">
+            <PhHistory measurements={measurements} />
+          </div>
         </div>
       </div>
 
