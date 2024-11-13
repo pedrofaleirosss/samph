@@ -97,8 +97,6 @@ const PoolPage = async ({ params }: PoolPageProps) => {
                     })}
                   </h3>
                 </div>
-
-                <Button className="w-full rounded-xl">Medir Agora</Button>
               </div>
             </div>
           ) : (

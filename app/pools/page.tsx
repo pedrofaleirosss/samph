@@ -7,7 +7,7 @@ import { PlusIcon } from "lucide-react";
 import Link from "next/link";
 import PoolItem from "../_components/pool-item";
 import { getPools } from "../_data/get-pools";
-import Home from "../page";
+import { redirect } from "next/navigation";
 
 interface PoolsPageProps {
   searchParams: {
@@ -19,7 +19,7 @@ const PoolsPage = async ({ searchParams }: PoolsPageProps) => {
   const session = await getServerSession(authOptions);
 
   if (!session?.user) {
-    return Home();
+    redirect("/");
   }
 
   const pools = await getPools({ searchParams });

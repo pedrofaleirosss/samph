@@ -1,9 +1,8 @@
 import { getServerSession } from "next-auth";
 import Header from "../../_components/header";
 import { authOptions } from "../../_lib/auth";
-import Home from "../../page";
 import { db } from "@/app/_lib/db";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { ChevronLeftIcon } from "lucide-react";
 import Link from "next/link";
 import PoolForm from "@/app/_components/pool-form";
@@ -27,7 +26,7 @@ const UpdatePoolPage = async ({ params }: UpdatePoolPageProps) => {
   });
 
   if (!session?.user) {
-    return Home();
+    redirect("/");
   }
 
   if (!pool || pool.userId != (session.user as any).id) {
@@ -40,9 +39,7 @@ const UpdatePoolPage = async ({ params }: UpdatePoolPageProps) => {
 
       <div className="mt-6 px-5 pb-6">
         <div className="flex items-center justify-between">
-          <h2 className="font-semibold text-primary">
-            Editar Piscina {pool.name}
-          </h2>
+          <h2 className="font-semibold text-primary">Editar Piscina</h2>
 
           <Link
             href={`/pools/${pool.id}`}

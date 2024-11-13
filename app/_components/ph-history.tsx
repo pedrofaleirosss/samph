@@ -15,6 +15,8 @@ import {
 } from "./ui/table";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { DataTable } from "./ui/data-table";
+import { measurementColumns } from "../pools/[id]/_columns/index";
 
 interface PhHistoryProps {
   measurements?: Measurement[];
@@ -54,39 +56,12 @@ const PhHistory = ({ measurements }: PhHistoryProps) => {
             transition={{ duration: 0.5, ease: "easeInOut" }}
             style={{ overflow: "hidden", minHeight: "20px" }}
           >
-            {measurements && measurements?.length > 0 ? (
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Valor do pH</TableHead>
-                    <TableHead>Hora da Medição</TableHead>
-                    <TableHead>Data da Medição</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {measurements?.map((measurement) => (
-                    <TableRow key={measurement.id}>
-                      <TableCell>
-                        {Number(measurement.phValue).toLocaleString("pt-BR", {
-                          minimumFractionDigits: 3,
-                          maximumSignificantDigits: 4,
-                        })}
-                      </TableCell>
-                      <TableCell>
-                        {format(measurement.date, "HH:mm", { locale: ptBR })}
-                      </TableCell>
-                      <TableCell>
-                        {format(measurement.date, "dd/MM/yyyy", {
-                          locale: ptBR,
-                        })}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            ) : (
-              <p className="text-left">Nenhuma medição realizada ainda.</p>
-            )}
+            <div className="mt-4">
+              <DataTable
+                columns={measurementColumns}
+                data={measurements ?? []}
+              />
+            </div>
           </motion.div>
         ) : (
           ""
