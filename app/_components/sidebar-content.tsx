@@ -35,7 +35,7 @@ const SidebarContent = async () => {
       </div>
 
       <div className="flex py-5">
-        <Button variant="ghost" className="gap-2" asChild>
+        <Button variant="ghost" className="w-full justify-start gap-2" asChild>
           <Link href="/pools">
             <House size={18} />
             Início

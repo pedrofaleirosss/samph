@@ -150,6 +150,7 @@ const PoolForm = ({ pool }: poolFormProps) => {
     } finally {
       setIsLoading(false);
       setIsButtonDisabled(false);
+      form.reset();
     }
   };
 

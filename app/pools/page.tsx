@@ -31,29 +31,29 @@ const PoolsPage = async ({ searchParams }: PoolsPageProps) => {
       <div className="mt-6 px-5 pb-6">
         <h2 className="font-semibold text-primary">Minhas Piscinas</h2>
 
-        <div className="mt-6">
+        <div className="mt-6 sm:max-w-[50%] md:max-w-[500px]">
           <Search />
         </div>
 
-        <div className="mt-6">
+        <div className="mt-6 sm:grid sm:grid-cols-2 sm:gap-x-4 md:grid-cols-3 lg:grid-cols-4">
           {pools.map((pool) => (
             <PoolItem key={pool.id} pool={pool} />
           ))}
-        </div>
 
-        <div>
-          <Button
-            className="w-full rounded-xl border-2 border-primary bg-white p-12 hover:bg-gray-100"
-            asChild
-          >
-            <Link
-              href="/create-pool"
-              className="flex h-full w-full items-center justify-center"
+          <div>
+            <Button
+              className="w-full rounded-xl border-2 border-primary bg-white p-12 hover:bg-gray-100"
+              asChild
             >
-              <PlusIcon className="text-primary" size={24} />
-            </Link>
-          </Button>
-          <p className="mt-2">Adicionar nova piscina</p>
+              <Link
+                href="/create-pool"
+                className="flex h-full items-center justify-center sm:h-[140px]"
+              >
+                <PlusIcon className="text-primary" size={24} />
+              </Link>
+            </Button>
+            <p className="mt-2">Adicionar nova piscina</p>
+          </div>
         </div>
       </div>
     </>

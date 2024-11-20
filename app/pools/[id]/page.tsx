@@ -100,7 +100,24 @@ const PoolPage = async ({ params }: PoolPageProps) => {
               </div>
             </div>
           ) : (
-            ""
+            <div>
+              <div className="mt-5 flex flex-col items-center justify-center space-y-4">
+                <h2 className="text-lg font-semibold text-primary">
+                  Última Medição: --
+                </h2>
+
+                <div className="space-y-4">
+                  <div className="rounded-2xl border-2 border-solid border-primary p-5">
+                    <h3 className="text-xl font-semibold text-primary">
+                      Valor do pH: --
+                    </h3>
+                  </div>
+                </div>
+              </div>
+              <p className="mt-2 text-center text-sm text-primary">
+                Conecte o sensor de pH
+              </p>
+            </div>
           )}
 
           <div className="my-4">

@@ -72,7 +72,7 @@ const LoginPage = () => {
 
   return (
     <>
-      <div className="my-[60px] flex justify-center">
+      <div className="my-[60px] flex justify-center md:my-[30px]">
         <Image src="/logo-login.png" alt="SAMPH" width={200} height={170} />
       </div>
       <div className="flex w-full justify-center bg-primary">
@@ -81,92 +81,96 @@ const LoginPage = () => {
         </h2>
       </div>
 
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit(onSubmit)}
-          onChange={() => setInvalidCredentialsMessage(false)}
-          className="mt-6 px-5"
-        >
-          <div className="space-y-2">
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-base font-normal">
-                    E-mail
-                  </FormLabel>
-                  <FormControl>
-                    <Input placeholder="Digite o e-mail" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-base font-normal">Senha</FormLabel>
-                  <FormControl>
-                    <div className="relative">
-                      <Input
-                        placeholder="Digite a senha"
-                        type={showPassword ? "text" : "password"}
-                        {...field}
-                      />
-
-                      <button
-                        className="absolute inset-y-0 right-0 px-3 py-2"
-                        onClick={togglePasswordVisibility}
-                        type="button"
-                      >
-                        {showPassword ? (
-                          <Eye className="text-primary" />
-                        ) : (
-                          <EyeOff className="text-primary" />
-                        )}
-                      </button>
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-
-          {invalidCredentialsMessage && (
-            <p className="mt-2 text-sm font-medium text-destructive">
-              E-mail ou senha incorretos.
-            </p>
-          )}
-
-          <Button
-            className="mt-6 w-full text-xl font-bold"
-            type="submit"
-            disabled={isButtonDisabled}
+      <div className="mx-auto max-w-[450px]">
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit(onSubmit)}
+            onChange={() => setInvalidCredentialsMessage(false)}
+            className="mt-6 px-5"
           >
-            {isLoading ? <Loader2 className="animate-spin" /> : "Entrar"}
-          </Button>
-        </form>
-      </Form>
+            <div className="space-y-2">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-base font-normal">
+                      E-mail
+                    </FormLabel>
+                    <FormControl>
+                      <Input placeholder="Digite o e-mail" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-      <div className="mx-5 mt-4 flex items-center justify-evenly before:mr-4 before:block before:h-px before:flex-grow before:bg-primary after:ml-4 after:block after:h-px after:flex-grow after:bg-primary">
-        ou
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-base font-normal">
+                      Senha
+                    </FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <Input
+                          placeholder="Digite a senha"
+                          type={showPassword ? "text" : "password"}
+                          {...field}
+                        />
+
+                        <button
+                          className="absolute inset-y-0 right-0 px-3 py-2"
+                          onClick={togglePasswordVisibility}
+                          type="button"
+                        >
+                          {showPassword ? (
+                            <Eye className="text-primary" />
+                          ) : (
+                            <EyeOff className="text-primary" />
+                          )}
+                        </button>
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            {invalidCredentialsMessage && (
+              <p className="mt-2 text-sm font-medium text-destructive">
+                E-mail ou senha incorretos.
+              </p>
+            )}
+
+            <Button
+              className="mt-6 w-full text-xl font-bold"
+              type="submit"
+              disabled={isButtonDisabled}
+            >
+              {isLoading ? <Loader2 className="animate-spin" /> : "Entrar"}
+            </Button>
+          </form>
+        </Form>
+
+        <div className="mx-5 mt-4 flex items-center justify-evenly before:mr-4 before:block before:h-px before:flex-grow before:bg-primary after:ml-4 after:block after:h-px after:flex-grow after:bg-primary">
+          ou
+        </div>
+
+        <div className="mx-5 mt-4">
+          <GoogleSignInButton />
+        </div>
+
+        <p className="mt-2 px-5 text-sm">
+          Não tem uma conta ainda?{" "}
+          <Link href="/sign-up" className="text-primary hover:underline">
+            Crie sua conta.
+          </Link>
+        </p>
       </div>
-
-      <div className="mx-5 mt-4">
-        <GoogleSignInButton />
-      </div>
-
-      <p className="mt-2 px-5 text-sm">
-        Não tem uma conta ainda?{" "}
-        <Link href="/sign-up" className="text-primary hover:underline">
-          Crie sua conta.
-        </Link>
-      </p>
     </>
   );
 };

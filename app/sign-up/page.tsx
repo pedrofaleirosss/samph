@@ -111,7 +111,7 @@ const SignUpPage = () => {
 
   return (
     <>
-      <div className="my-[60px] flex justify-center">
+      <div className="my-[60px] flex justify-center md:my-[30px]">
         <Image src="/logo-login.png" alt="SAMPH" width={200} height={170} />
       </div>
       <div className="flex w-full justify-center bg-primary">
@@ -120,179 +120,185 @@ const SignUpPage = () => {
         </h2>
       </div>
 
-      <Form {...form}>
-        <form
-          className="mt-6 px-5"
-          onSubmit={form.handleSubmit(onSubmit)}
-          onChange={() => {
-            setEmailConflictMessage(false);
-            setSignUpErrorMessage(false);
-          }}
-        >
-          <div className="space-y-2">
-            <FormField
-              control={form.control}
-              name="firstName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-base font-normal">Nome</FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Digite o nome"
-                      {...field}
-                      maxLength={50}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+      <div className="mx-auto max-w-[450px]">
+        <Form {...form}>
+          <form
+            className="mt-6 px-5"
+            onSubmit={form.handleSubmit(onSubmit)}
+            onChange={() => {
+              setEmailConflictMessage(false);
+              setSignUpErrorMessage(false);
+            }}
+          >
+            <div className="space-y-2">
+              <FormField
+                control={form.control}
+                name="firstName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-base font-normal">
+                      Nome
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Digite o nome"
+                        {...field}
+                        maxLength={50}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <FormField
-              control={form.control}
-              name="lastName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-base font-normal">
-                    Sobrenome
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Digite o sobrenome"
-                      {...field}
-                      maxLength={50}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+              <FormField
+                control={form.control}
+                name="lastName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-base font-normal">
+                      Sobrenome
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Digite o sobrenome"
+                        {...field}
+                        maxLength={50}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-base font-normal">
-                    E-mail
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      placeholder="Digite o e-mail"
-                      {...field}
-                      maxLength={254}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-base font-normal">
+                      E-mail
+                    </FormLabel>
+                    <FormControl>
+                      <Input
+                        placeholder="Digite o e-mail"
+                        {...field}
+                        maxLength={254}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
-            {emailConflictMessage && (
+              {emailConflictMessage && (
+                <p className="mt-2 text-sm font-medium text-destructive">
+                  Este e-mail já está sendo utilizado por outro usuário.
+                </p>
+              )}
+
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-base font-normal">
+                      Senha
+                    </FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <Input
+                          placeholder="Digite a senha"
+                          {...field}
+                          type={showPassword ? "text" : "password"}
+                          maxLength={30}
+                        />
+
+                        <button
+                          className="absolute inset-y-0 right-0 px-3 py-2"
+                          onClick={togglePasswordVisibility}
+                          type="button"
+                        >
+                          {showPassword ? (
+                            <Eye className="text-primary" />
+                          ) : (
+                            <EyeOff className="text-primary" />
+                          )}
+                        </button>
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="confirmPassword"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-base font-normal">
+                      Confirmar senha
+                    </FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <Input
+                          placeholder="Digite a senha novamente"
+                          {...field}
+                          type={showConfirmPassword ? "text" : "password"}
+                          maxLength={30}
+                        />
+
+                        <button
+                          className="absolute inset-y-0 right-0 px-3 py-2"
+                          onClick={toggleConfirmPasswordVisibility}
+                          type="button"
+                        >
+                          {showConfirmPassword ? (
+                            <Eye className="text-primary" />
+                          ) : (
+                            <EyeOff className="text-primary" />
+                          )}
+                        </button>
+                      </div>
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
+            {signUpErrorMessage && (
               <p className="mt-2 text-sm font-medium text-destructive">
-                Este e-mail já está sendo utilizado por outro usuário.
+                Erro ao cadastrar usuário. Tente novamente mais tarde.
               </p>
             )}
 
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-base font-normal">Senha</FormLabel>
-                  <FormControl>
-                    <div className="relative">
-                      <Input
-                        placeholder="Digite a senha"
-                        {...field}
-                        type={showPassword ? "text" : "password"}
-                        maxLength={30}
-                      />
+            <Button
+              className="mt-6 w-full text-xl font-bold"
+              type="submit"
+              disabled={isButtonDisabled}
+            >
+              {isLoading ? <Loader2 className="animate-spin" /> : "Cadastrar"}
+            </Button>
+          </form>
+        </Form>
 
-                      <button
-                        className="absolute inset-y-0 right-0 px-3 py-2"
-                        onClick={togglePasswordVisibility}
-                        type="button"
-                      >
-                        {showPassword ? (
-                          <Eye className="text-primary" />
-                        ) : (
-                          <EyeOff className="text-primary" />
-                        )}
-                      </button>
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+        <div className="mx-5 mt-4 flex items-center justify-evenly before:mr-4 before:block before:h-px before:flex-grow before:bg-primary after:ml-4 after:block after:h-px after:flex-grow after:bg-primary">
+          ou
+        </div>
 
-            <FormField
-              control={form.control}
-              name="confirmPassword"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="text-base font-normal">
-                    Confirmar senha
-                  </FormLabel>
-                  <FormControl>
-                    <div className="relative">
-                      <Input
-                        placeholder="Digite a senha novamente"
-                        {...field}
-                        type={showConfirmPassword ? "text" : "password"}
-                        maxLength={30}
-                      />
+        <div className="mx-5 mt-4">
+          <GoogleSignInButton />
+        </div>
 
-                      <button
-                        className="absolute inset-y-0 right-0 px-3 py-2"
-                        onClick={toggleConfirmPasswordVisibility}
-                        type="button"
-                      >
-                        {showConfirmPassword ? (
-                          <Eye className="text-primary" />
-                        ) : (
-                          <EyeOff className="text-primary" />
-                        )}
-                      </button>
-                    </div>
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-
-          {signUpErrorMessage && (
-            <p className="mt-2 text-sm font-medium text-destructive">
-              Erro ao cadastrar usuário. Tente novamente mais tarde.
-            </p>
-          )}
-
-          <Button
-            className="mt-6 w-full text-xl font-bold"
-            type="submit"
-            disabled={isButtonDisabled}
-          >
-            {isLoading ? <Loader2 className="animate-spin" /> : "Cadastrar"}
-          </Button>
-        </form>
-      </Form>
-
-      <div className="mx-5 mt-4 flex items-center justify-evenly before:mr-4 before:block before:h-px before:flex-grow before:bg-primary after:ml-4 after:block after:h-px after:flex-grow after:bg-primary">
-        ou
+        <p className="mb-6 mt-2 px-5 text-sm">
+          Já possui uma conta?{" "}
+          <Link href="/login" className="text-primary hover:underline">
+            Faça seu Login.
+          </Link>
+        </p>
       </div>
-
-      <div className="mx-5 mt-4">
-        <GoogleSignInButton />
-      </div>
-
-      <p className="mb-6 mt-2 px-5 text-sm">
-        Já possui uma conta?{" "}
-        <Link href="/login" className="text-primary hover:underline">
-          Faça seu Login.
-        </Link>
-      </p>
 
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogContent className="w-[60%] rounded-xl">

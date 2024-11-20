@@ -37,7 +37,7 @@ const UpdatePoolPage = async ({ params }: UpdatePoolPageProps) => {
     <>
       <Header />
 
-      <div className="mt-6 px-5 pb-6">
+      <div className="mx-auto mt-6 px-5 pb-6 sm:max-w-[450px] lg:max-w-[550px]">
         <div className="flex items-center justify-between">
           <h2 className="font-semibold text-primary">Editar Piscina</h2>
 
