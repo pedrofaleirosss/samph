@@ -24,6 +24,7 @@ export async function POST(req: Request) {
     });
 
     revalidatePath(`/pools/${poolId}`);
+    revalidatePath("/pools");
 
     return NextResponse.json(
       { message: "Medição cadastrada com sucesso!" },

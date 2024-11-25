@@ -91,7 +91,9 @@ const PoolPage = async ({ params }: PoolPageProps) => {
     .reverse(); // Inverte a ordem para a data mais antiga primeiro
 
   const timeZone = "America/Sao_Paulo";
-  const zonedDate = toZonedTime(lastMeasurement.date, timeZone);
+  const zonedDate = lastMeasurement
+    ? toZonedTime(lastMeasurement.date, timeZone)
+    : "";
 
   return (
     <div className="flex min-h-screen flex-col">

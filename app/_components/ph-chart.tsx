@@ -1,6 +1,13 @@
 "use client";
 
-import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
+import {
+  Bar,
+  BarChart,
+  CartesianGrid,
+  LabelList,
+  XAxis,
+  YAxis,
+} from "recharts";
 
 import {
   Card,
@@ -82,7 +89,14 @@ const PhChart = ({ dailyAveragePH }: PhChartProps) => {
             />
             <YAxis domain={[0, 14]} width={15} />
             <ChartTooltip content={<ChartTooltipContent />} />
-            <Bar dataKey="phValue" fill="#015CAF" radius={4} />
+            <Bar dataKey="phValue" fill="#015CAF" radius={4}>
+              <LabelList
+                position="top"
+                offset={12}
+                className="fill-primary"
+                fontSize={12}
+              />
+            </Bar>
           </BarChart>
         </ChartContainer>
       </CardContent>

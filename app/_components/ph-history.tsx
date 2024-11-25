@@ -8,7 +8,6 @@ import { Measurement } from "@prisma/client";
 import { DataTable } from "./ui/data-table";
 import { measurementColumns } from "../pools/[id]/_columns/index";
 import PhChart from "./ph-chart";
-import { Decimal } from "@prisma/client/runtime/library";
 
 type DailyAveragePH = {
   date: Date;
