@@ -9,9 +9,9 @@ import { ChevronLeftIcon, ChevronRightIcon, MenuIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { format, subDays } from "date-fns";
+import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
-import { Decimal } from "@prisma/client/runtime/library";
+import { toZonedTime } from "date-fns-tz";
 
 interface PoolPageProps {
   params: {
@@ -90,6 +90,9 @@ const PoolPage = async ({ params }: PoolPageProps) => {
     })
     .reverse(); // Inverte a ordem para a data mais antiga primeiro
 
+  const timeZone = "America/Sao_Paulo";
+  const zonedDate = toZonedTime(lastMeasurement.date, timeZone);
+
   return (
     <div className="flex min-h-screen flex-col">
       <div className="flex-grow">
@@ -132,9 +135,8 @@ const PoolPage = async ({ params }: PoolPageProps) => {
           {measurements.length > 0 ? (
             <div className="mt-5 flex flex-col items-center justify-center space-y-4">
               <h2 className="text-lg font-semibold text-primary">
-                Última Medição:{" "}
-                {format(lastMeasurement.date, "HH:mm", { locale: ptBR })} -{" "}
-                {format(lastMeasurement.date, "dd/MM/yyyy", { locale: ptBR })}
+                Última Medição: {format(zonedDate, "HH:mm", { locale: ptBR })} -{" "}
+                {format(zonedDate, "dd/MM/yyyy", { locale: ptBR })}
               </h2>
 
               <div className="space-y-4">
