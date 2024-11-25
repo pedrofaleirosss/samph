@@ -5,24 +5,22 @@ import { Button } from "./ui/button";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Measurement } from "@prisma/client";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "./ui/table";
-import { format } from "date-fns";
-import { ptBR } from "date-fns/locale";
 import { DataTable } from "./ui/data-table";
 import { measurementColumns } from "../pools/[id]/_columns/index";
+import PhChart from "./ph-chart";
+import { Decimal } from "@prisma/client/runtime/library";
+
+type DailyAveragePH = {
+  date: Date;
+  phValue: string;
+};
 
 interface PhHistoryProps {
-  measurements?: Measurement[];
+  measurements: Measurement[];
+  dailyAveragePH: DailyAveragePH[];
 }
 
-const PhHistory = ({ measurements }: PhHistoryProps) => {
+const PhHistory = ({ measurements, dailyAveragePH }: PhHistoryProps) => {
   const [showPhHistory, setShowPhHistory] = useState<boolean>(false);
 
   const tooglePhHistoryVisibility = () => {
@@ -56,11 +54,15 @@ const PhHistory = ({ measurements }: PhHistoryProps) => {
             transition={{ duration: 0.5, ease: "easeInOut" }}
             style={{ overflow: "hidden", minHeight: "20px" }}
           >
-            <div className="mt-4">
+            <div className="mt-4 space-y-4">
               <DataTable
                 columns={measurementColumns}
                 data={measurements ?? []}
               />
+
+              {measurements.length > 0 && (
+                <PhChart dailyAveragePH={dailyAveragePH} />
+              )}
             </div>
           </motion.div>
         ) : (

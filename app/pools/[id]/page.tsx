@@ -9,8 +9,9 @@ import { ChevronLeftIcon, ChevronRightIcon, MenuIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { format } from "date-fns";
+import { format, subDays } from "date-fns";
 import { ptBR } from "date-fns/locale";
+import { Decimal } from "@prisma/client/runtime/library";
 
 interface PoolPageProps {
   params: {
@@ -39,6 +40,55 @@ const PoolPage = async ({ params }: PoolPageProps) => {
   });
 
   const lastMeasurement = measurements[0];
+
+  const getLast7Days = () => {
+    const today = new Date();
+    const last7Days = [];
+    for (let i = 0; i <= 7; i++) {
+      const date = new Date(today);
+      date.setDate(today.getDate() - i); // Subtrai dias para pegar os 7 últimos
+      last7Days.push(date.toISOString().split("T")[0]); // Formata como 'yyyy-MM-dd'
+    }
+    return last7Days;
+  };
+
+  const last7Days = getLast7Days();
+
+  const groupedByDay = measurements.reduce(
+    (acc, measurement) => {
+      const date = new Date(measurement.date);
+
+      // Formata a data no formato 'yyyy-MM-dd', respeitando o fuso horário
+      const localDay = format(date, "yyyy-MM-dd", { locale: ptBR });
+
+      // Verifica se a data está dentro dos últimos 7 dias
+      if (last7Days.includes(localDay)) {
+        if (!acc[localDay]) {
+          acc[localDay] = [];
+        }
+        acc[localDay].push(parseFloat(String(measurement.phValue))); // Certifique-se de que phValue é um número
+      }
+      return acc;
+    },
+    {} as Record<string, number[]>,
+  );
+
+  // Calcular a média por dia
+  const dailyAveragePH = Object.entries(groupedByDay)
+    .map(([day, values]) => {
+      const average =
+        values.reduce((sum, value) => sum + value, 0) / values.length;
+
+      // Criar uma data no fuso horário local, ajustando para início do dia
+      const [year, month, dayOfMonth] = day.split("-").map(Number);
+      const localDate = new Date(year, month - 1, dayOfMonth); // Note que o mês é 0-indexado
+
+      return {
+        date: localDate,
+        phValue: average.toFixed(2), // Mantém 2 casas decimais
+      };
+    })
+    .reverse(); // Inverte a ordem para a data mais antiga primeiro
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -125,7 +175,10 @@ const PoolPage = async ({ params }: PoolPageProps) => {
           </div>
 
           <div className="my-4">
-            <PhHistory measurements={measurements} />
+            <PhHistory
+              measurements={measurements}
+              dailyAveragePH={dailyAveragePH}
+            />
           </div>
         </div>
       </div>
