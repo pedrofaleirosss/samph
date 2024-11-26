@@ -22,8 +22,8 @@ interface deletePoolButtonProps {
 const DeletePoolButton = ({ pool }: deletePoolButtonProps) => {
   const router = useRouter();
 
-  const handleDeletePool = () => {
-    deletePool({ pool });
+  const handleDeletePool = async () => {
+    await deletePool({ pool });
     router.push("/pools");
   };
 

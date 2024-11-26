@@ -7,7 +7,8 @@ import { PlusIcon } from "lucide-react";
 import Link from "next/link";
 import PoolItem from "../_components/pool-item";
 import { getPools } from "../_data/get-pools";
-import { redirect } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 interface PoolsPageProps {
   searchParams: {

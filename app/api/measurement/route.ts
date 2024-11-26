@@ -23,8 +23,8 @@ export async function POST(req: Request) {
       },
     });
 
-    revalidatePath(`/pools/${poolId}`);
     revalidatePath("/pools");
+    revalidatePath(`/pools/${poolId}`);
 
     return NextResponse.json(
       { message: "Medição cadastrada com sucesso!" },
