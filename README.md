@@ -78,43 +78,43 @@ Coordenação: **Katia Maria Teruco Fushita**
 ## 🖥️ Prints do sistema
 
 ### Tela de abertura
-![image](https://github.com/user-attachments/assets/534e7f4d-c708-461e-ac59-5d6452c3b1d3)
-
+<!-- ![image](https://github.com/user-attachments/assets/534e7f4d-c708-461e-ac59-5d6452c3b1d3) -->
+<img src="https://github.com/user-attachments/assets/534e7f4d-c708-461e-ac59-5d6452c3b1d3" style="width: 30%" />
 
 ---
 
 ### Tela de cadastro
-![image](https://github.com/user-attachments/assets/de7444e7-7573-4808-9752-aafd88940a00)
-
+<!-- ![image](https://github.com/user-attachments/assets/de7444e7-7573-4808-9752-aafd88940a00) -->
+<img src="https://github.com/user-attachments/assets/de7444e7-7573-4808-9752-aafd88940a00" style="width: 30%" />
 
 ---
 
 ### Tela de login
-![image](https://github.com/user-attachments/assets/5956ab22-e2c6-4d95-b801-0e708af8e3cf)
-
+<!-- ![image](https://github.com/user-attachments/assets/5956ab22-e2c6-4d95-b801-0e708af8e3cf) -->
+<img src="https://github.com/user-attachments/assets/5956ab22-e2c6-4d95-b801-0e708af8e3cf" style="width: 30%" />
 
 ---
 
 ### Tela de piscinas
-![image](https://github.com/user-attachments/assets/b5fd0142-4610-44be-9dcd-b2bd2e605cb8)
-
+<!-- ![image](https://github.com/user-attachments/assets/b5fd0142-4610-44be-9dcd-b2bd2e605cb8) -->
+<img src="https://github.com/user-attachments/assets/b5fd0142-4610-44be-9dcd-b2bd2e605cb8" style="width: 30%" />
 
 ---
 
 ### Tela de cadastro de piscina
-![image](https://github.com/user-attachments/assets/b977bd4f-7831-4214-9958-bea9b7e43607)
-
+<!-- ![image](https://github.com/user-attachments/assets/b977bd4f-7831-4214-9958-bea9b7e43607) -->
+<img src="https://github.com/user-attachments/assets/b977bd4f-7831-4214-9958-bea9b7e43607" style="width: 30%" />
 
 ---
 
 ### Tela de uma piscina (informações e histórico)
-![image](https://github.com/user-attachments/assets/ceeaa420-6fc1-4ed9-8dba-3b219dbcc5cb)
-
+<!-- ![image](https://github.com/user-attachments/assets/ceeaa420-6fc1-4ed9-8dba-3b219dbcc5cb) -->
+<img src="https://github.com/user-attachments/assets/ceeaa420-6fc1-4ed9-8dba-3b219dbcc5cb" style="width: 30%" />
 
 ---
 
 ### Tela de edição de piscina
-![image](https://github.com/user-attachments/assets/d66f0171-efc5-42fe-8807-a96192ee91ff)
-
+<!-- ![image](https://github.com/user-attachments/assets/d66f0171-efc5-42fe-8807-a96192ee91ff) -->
+<img src="https://github.com/user-attachments/assets/d66f0171-efc5-42fe-8807-a96192ee91ff" style="width: 30%" />
 
 ---
